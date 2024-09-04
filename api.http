@@ -1,0 +1,8 @@
+POST http://localhost:3014/api/webhook/
+content-type: application/json
+
+{
+  "queryResult": {
+    "queryText": "Sawubona Unjani"
+  }
+}
