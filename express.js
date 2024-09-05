@@ -5,6 +5,12 @@ import axios from 'axios';
 const app = express();
 app.use(bodyParser.json());
 
+
+
+app.get('/api/testing/',  (req, res) => {
+  res.status(200).json('we are runnig on port: 3014')
+})
+
 // Google Translate API key and endpoint
 const googleTranslateAPIKey = '4a003cec64msh637ccde1edc67b8p14b3e3jsnc491a9d60cc6'; // Replace with your API key
 const googleTranslateURL = 'https://google-translate113.p.rapidapi.com/api/v1/translator/text';
