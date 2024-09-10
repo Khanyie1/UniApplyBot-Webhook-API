@@ -24,7 +24,7 @@ app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
   function checkLocaleAndExecute(handler) {
     return (agent) => {
       const locale = agent.locale;
-      if (locale == 'en-us' || locale == 'zu') {
+      if (locale == 'en' || locale == 'zu') {
         return handler(agent);
       } else {
         agent.add('Sorry, your language is not supported.');
@@ -33,7 +33,7 @@ app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
   }
 
   function uniApplyBotAgent(agent) {
-    if (locale == 'en-us') {
+    if (locale == 'en') {
       agent.add('Getting the responses from the webhook');
     } else if (locale == 'zu') {
       agent.add('Sawubona, singakusiza ngani');
@@ -42,7 +42,7 @@ app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
 
   function GetUjInfo(agent) {
     var payloadResponse;
-    if (locale == 'en-us') {
+    if (locale == 'en') {
       payloadResponse = {
         "richContent": [
           [
