@@ -18,31 +18,31 @@ app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
   });
 
   // Get the user's locale language
-  const locale = agent.locale;
+  // const locale = agent.locale;
 
-  // Wrapper function to check locale language
-  function checkLocaleAndExecute(handler) {
-    return (agent) => {
-      const locale = agent.locale;
-      if (locale == 'en' || locale == 'zu') {
-        return handler(agent);
-      } else {
-        agent.add('Sorry, your language is not supported.');
-      }
-    };
-  }
+  // // Wrapper function to check locale language
+  // function checkLocaleAndExecute(handler) {
+  //   return (agent) => {
+  //     const locale = agent.locale;
+  //     if (locale == 'en' || locale == 'zu') {
+  //       return handler(agent);
+  //     } else {
+  //       agent.add('Sorry, your language is not supported.');
+  //     }
+  //   };
+  // }
 
   function uniApplyBotAgent(agent) {
-    if (locale == 'en') {
+    if (agent.locale == 'en-us') {
       agent.add('Getting the responses from the webhook');
-    } else if (locale == 'zu') {
+    } else if (agent.locale == 'zu') {
       agent.add('Sawubona, singakusiza ngani');
     }
   }
 
   function GetUjInfo(agent) {
     var payloadResponse;
-    if (locale == 'en') {
+    if (agent.locale == 'en-us') {
       payloadResponse = {
         "richContent": [
           [
@@ -104,7 +104,7 @@ app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
           ]
         ]
       };
-    } else if (locale == 'zu') {
+    } else if (agent.locale == 'zu') {
       payloadResponse = {
         "richContent": [
           [
@@ -182,8 +182,8 @@ app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
   var intentMap = new Map();
 
   // Use the wrapper function
-  intentMap.set('greetings', checkLocaleAndExecute(uniApplyBotAgent));
-  intentMap.set('GetUjInfo', checkLocaleAndExecute(GetUjInfo));
+  intentMap.set('greetings', uniApplyBotAgent);
+  intentMap.set('GetUjInfo', GetUjInfo);
 
   agent.handleRequest(intentMap);
 });
