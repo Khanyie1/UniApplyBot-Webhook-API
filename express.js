@@ -1,58 +1,39 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import axios from 'axios';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const dialogflowfulfillment = require('dialogflow-fulfillment');
 
 const app = express();
 app.use(bodyParser.json());
 
-
-
-app.get('/api/testing/',  (req, res) => {
-  res.status(200).json('we are runnig on port: 3014')
+app.get('/api/webhook/dialogflow/', (req, res) => {
+  res.status(200).send('I have tried again : port 3014')
 })
 
-// Google Translate API key and endpoint
-const googleTranslateAPIKey = '4a003cec64msh637ccde1edc67b8p14b3e3jsnc491a9d60cc6'; // Replace with your API key
-const googleTranslateURL = 'https://google-translate113.p.rapidapi.com/api/v1/translator/text';
+app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
+  const agent = new dialogflowfulfillment.WebhookClient({
+    request: req,
+    response: res
+  });
 
-app.post('/api/webhook/', async (req, res) => {
-  try {
-    const userInput = req.body.queryResult.queryText;
 
-    // Detect language using Google Translate API
-    const response = await axios.post(googleTranslateURL, {
-      from: 'auto',
-      to: 'en',
-      text: userInput
-    }, {
-      headers: {
-        'X-RapidAPI-Key': googleTranslateAPIKey,
-        'Content-Type': 'application/json'
-      }
-    });
+  // if(locale == "en"){
+  //   agent.add(`Good day, how are you?`)
+  // } else if (locale == "zulu"){
+  //   agent.add(`Sawubona singakusiza ngani`)
+  // }
 
-    const detectedLanguage = response.data.source_language_code;
-
-    // Map language codes to Dialogflow supported languages
-    const supportedLanguages = {
-      'en': 'English',
-      'zu': 'Zulu',
-      'se': 'Sesotho',
-      'xh': 'Xhosa'
-    };
-
-    const language = supportedLanguages[detectedLanguage] || "Unsupported";
-
-    // Respond based on detected language
-    res.json({
-      fulfillmentText: `Detected language: ${language}.`
-    });
-  } catch (error) {
-    console.error('Error detecting language:', error);
-    res.json({
-      fulfillmentText: "There was an error processing your request."
-    });
+  function uniApplyBotAgent(agent) {
+    agent.add("Getting the responses from the webhook");
   }
+
+  var intentMap = new Map();
+
+  intentMap.set('greetings', uniApplyBotAgent)
+
+  agent.handleRequest(intentMap);
 });
 
 const PORT = process.env.PORT || 3014;
