@@ -31,6 +31,8 @@
     "express": "^4.19.2",
     "nodemon": "^3.1.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/dialogflow-fulfillment": "^0.6.1"
+  },
   "description": ""
 }
