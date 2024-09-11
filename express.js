@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/api/webhook/dialogflow/', (req, res) => {
-  res.status(200).send('I have tried again: port 3014');
+  res.status(200).send('Webhook is active: port 3014');
 });
 
 app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
@@ -17,22 +17,25 @@ app.post('/api/webhook/dialogflow/', express.json(), (req, res) => {
     response: res,
   });
 
+  // Middleware to check locale and execute appropriate handler
   function checkLocaleAndExecute(handler) {
     return (agent) => {
-      const locale = agent.locale;
+      const locale = agent.locale || 'en';
       console.log('Detected language: ', locale);
 
-      if (locale === 'en' || locale === 'zu') {
+      const supportedLanguages = ['en', 'zu'];
+
+      if (supportedLanguages.includes(locale)) {
         return handler(agent, locale);
       } else {
-        agent.add('Sorry, your language is not supported.');
+        agent.add('Sorry, your language is not supported yet.');
       }
     };
   }
 
   function uniApplyBotAgent(agent, locale) {
     if (locale === 'en') {
-      agent.add('Getting the responses from the webhook');
+      agent.add('Getting the responses from the webhook in English.');
     } else if (locale === 'zu') {
       agent.add('Sawubona, singakusiza ngani?');
     }
